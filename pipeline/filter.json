@@ -27,7 +27,17 @@
 		"parameters": {
 			"arrray": {
 				"type": "array",
-				"defaultValue": "1,2,3,4,5,6,5,6,89"
+				"defaultValue": [
+					1,
+					2,
+					3,
+					4,
+					5,
+					6,
+					5,
+					6,
+					89
+				]
 			}
 		},
 		"annotations": []
