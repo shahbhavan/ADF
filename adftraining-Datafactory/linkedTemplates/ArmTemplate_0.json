@@ -1,0 +1,710 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "adftraining-Datafactory"
+		},
+		"DBforjoin_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'DBforjoin'"
+		},
+		"adl_service_gen2_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'adl_service_gen2'"
+		},
+		"azuredatabricksnew_accessToken": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accessToken' of 'azuredatabricksnew'"
+		},
+		"cdclinked_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'cdclinked'"
+		},
+		"insurancelinked_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'insurancelinked'"
+		},
+		"linkedserviceforblob_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'linkedserviceforblob'"
+		},
+		"outputforinsurance_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'outputforinsurance'"
+		},
+		"sqllinkedservices_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'sqllinkedservices'"
+		},
+		"sqltoadlgen2_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'sqltoadlgen2'"
+		},
+		"adl_service_gen2_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://adfdatalaketraining.dfs.core.windows.net/"
+		},
+		"outputforinsurance_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://adfdatalaketraining.dfs.core.windows.net/"
+		},
+		"sqltoadlgen2_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://adfdatalaketraining.dfs.core.windows.net/"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/DBforjoin')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureSqlDatabase",
+				"typeProperties": {
+					"connectionString": "[parameters('DBforjoin_connectionString')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/adl_service_gen2')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobFS",
+				"typeProperties": {
+					"url": "[parameters('adl_service_gen2_properties_typeProperties_url')]",
+					"accountKey": {
+						"type": "SecureString",
+						"value": "[parameters('adl_service_gen2_accountKey')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/azuredatabricksnew')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureDatabricks",
+				"typeProperties": {
+					"domain": "https://adb-281204478657166.6.azuredatabricks.net",
+					"accessToken": {
+						"type": "SecureString",
+						"value": "[parameters('azuredatabricksnew_accessToken')]"
+					},
+					"newClusterNodeType": "Standard_DS3_v2",
+					"newClusterNumOfWorker": "1",
+					"newClusterSparkEnvVars": {
+						"PYSPARK_PYTHON": "/databricks/python3/bin/python3"
+					},
+					"newClusterVersion": "10.4.x-scala2.12",
+					"newClusterInitScripts": [],
+					"clusterOption": "Fixed"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/cdclinked')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureSqlDatabase",
+				"typeProperties": {
+					"connectionString": "[parameters('cdclinked_connectionString')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/insurancelinked')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobStorage",
+				"typeProperties": {
+					"connectionString": "[parameters('insurancelinked_connectionString')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/linkedserviceforblob')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobStorage",
+				"typeProperties": {
+					"connectionString": "[parameters('linkedserviceforblob_connectionString')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/outputforinsurance')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobFS",
+				"typeProperties": {
+					"url": "[parameters('outputforinsurance_properties_typeProperties_url')]",
+					"accountKey": {
+						"type": "SecureString",
+						"value": "[parameters('outputforinsurance_accountKey')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/sqllinkedservices')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureSqlDatabase",
+				"typeProperties": {
+					"connectionString": "[parameters('sqllinkedservices_connectionString')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/sqltoadlgen2')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobFS",
+				"typeProperties": {
+					"url": "[parameters('sqltoadlgen2_properties_typeProperties_url')]",
+					"accountKey": {
+						"type": "SecureString",
+						"value": "[parameters('sqltoadlgen2_accountKey')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/vmintegration')]",
+			"type": "Microsoft.DataFactory/factories/integrationRuntimes",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "SelfHosted",
+				"typeProperties": {}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/databricks')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Notebook1",
+						"type": "DatabricksNotebook",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"notebookPath": "/Users/bhavan.shaha@synechron.com/testing1"
+						},
+						"linkedServiceName": {
+							"referenceName": "azuredatabricksnew",
+							"type": "LinkedServiceReference"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/azuredatabricksnew')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/adldatalakegen2')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "adl_service_gen2",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "blobtoadl"
+				},
+				"annotations": [],
+				"type": "Json",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "drug.json",
+						"fileSystem": "output"
+					}
+				},
+				"schema": {}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/adl_service_gen2')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/blobinputfile')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "linkedserviceforblob",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "blobtoadl"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "drug200.csv",
+						"container": "inputdata"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "Age",
+						"type": "String"
+					},
+					{
+						"name": "Sex",
+						"type": "String"
+					},
+					{
+						"name": "BP",
+						"type": "String"
+					},
+					{
+						"name": "Cholesterol",
+						"type": "String"
+					},
+					{
+						"name": "NAK",
+						"type": "String"
+					},
+					{
+						"name": "Drug",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/linkedserviceforblob')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/dataflowdataset')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "linkedserviceforblob",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "exedataflow"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "drug200.csv",
+						"container": "inputdata"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "Age",
+						"type": "String"
+					},
+					{
+						"name": "Sex",
+						"type": "String"
+					},
+					{
+						"name": "BP",
+						"type": "String"
+					},
+					{
+						"name": "Cholesterol",
+						"type": "String"
+					},
+					{
+						"name": "NAK",
+						"type": "String"
+					},
+					{
+						"name": "Drug",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/linkedserviceforblob')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/outputdataflow')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "adl_service_gen2",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "exedataflow"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "outputdataflow.csv",
+						"fileSystem": "output"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/adl_service_gen2')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/sqldataset')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "sqllinkedservices",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "dbfolder"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "id",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "name",
+						"type": "varchar"
+					},
+					{
+						"name": "location",
+						"type": "varchar"
+					},
+					{
+						"name": "pincode",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "cc",
+						"type": "varchar"
+					},
+					{
+						"name": "salary",
+						"type": "int",
+						"precision": 10
+					}
+				],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "bankdata"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/sqllinkedservices')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/sqltoadlgen2')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "sqltoadlgen2",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "dbfolder"
+				},
+				"annotations": [],
+				"type": "Json",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileSystem": "output"
+					}
+				},
+				"schema": {}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/sqltoadlgen2')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/blobtoadlpipeline')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "pipeline is grouping of different activities",
+				"activities": [
+					{
+						"name": "Copy data from bob to adl",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "DelimitedTextSource",
+								"storeSettings": {
+									"type": "AzureBlobStorageReadSettings",
+									"recursive": true,
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "DelimitedTextReadSettings"
+								}
+							},
+							"sink": {
+								"type": "JsonSink",
+								"storeSettings": {
+									"type": "AzureBlobFSWriteSettings"
+								},
+								"formatSettings": {
+									"type": "JsonWriteSettings"
+								}
+							},
+							"enableStaging": false
+						},
+						"inputs": [
+							{
+								"referenceName": "blobinputfile",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "adldatalakegen2",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"annotations": [],
+				"lastPublishTime": "2023-05-02T07:28:48Z"
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/blobinputfile')]",
+				"[concat(variables('factoryId'), '/datasets/adldatalakegen2')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/pipeline1')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Copy data1",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "AzureSqlSource",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"sink": {
+								"type": "JsonSink",
+								"storeSettings": {
+									"type": "AzureBlobFSWriteSettings"
+								},
+								"formatSettings": {
+									"type": "JsonWriteSettings"
+								}
+							},
+							"enableStaging": false
+						},
+						"inputs": [
+							{
+								"referenceName": "sqldataset",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "sqltoadlgen2",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"annotations": [],
+				"lastPublishTime": "2023-05-02T09:35:00Z"
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/sqldataset')]",
+				"[concat(variables('factoryId'), '/datasets/sqltoadlgen2')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/pracdataflow')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "blobinputfile",
+								"type": "DatasetReference"
+							},
+							"name": "source1"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "outputdataflow",
+								"type": "DatasetReference"
+							},
+							"name": "sink1"
+						}
+					],
+					"transformations": [
+						{
+							"name": "select1"
+						},
+						{
+							"name": "cast1"
+						},
+						{
+							"name": "filter1"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          Age as string,",
+						"          Sex as string,",
+						"          BP as string,",
+						"          Cholesterol as string,",
+						"          NAK as string,",
+						"          Drug as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false) ~> source1",
+						"source1 select(mapColumn(",
+						"          Age,",
+						"          Gender = Sex,",
+						"          BP,",
+						"          CHO = Cholesterol,",
+						"          Drug",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> select1",
+						"select1 cast(output(",
+						"          Age as integer '000'",
+						"     ),",
+						"     errors: true) ~> cast1",
+						"cast1 filter(equals(Gender, 'F')&&greater(Age, 40)) ~> filter1",
+						"filter1 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     umask: 0022,",
+						"     preCommands: [],",
+						"     postCommands: [],",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> sink1"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/blobinputfile')]",
+				"[concat(variables('factoryId'), '/datasets/outputdataflow')]"
+			]
+		}
+	]
+}

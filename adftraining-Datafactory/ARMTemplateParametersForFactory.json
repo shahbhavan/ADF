@@ -1,0 +1,45 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"value": "adftraining-Datafactory"
+		},
+		"DBforjoin_connectionString": {
+			"value": ""
+		},
+		"adl_service_gen2_accountKey": {
+			"value": ""
+		},
+		"azuredatabricksnew_accessToken": {
+			"value": ""
+		},
+		"cdclinked_connectionString": {
+			"value": ""
+		},
+		"insurancelinked_connectionString": {
+			"value": ""
+		},
+		"linkedserviceforblob_connectionString": {
+			"value": ""
+		},
+		"outputforinsurance_accountKey": {
+			"value": ""
+		},
+		"sqllinkedservices_connectionString": {
+			"value": ""
+		},
+		"sqltoadlgen2_accountKey": {
+			"value": ""
+		},
+		"adl_service_gen2_properties_typeProperties_url": {
+			"value": "https://adfdatalaketraining.dfs.core.windows.net/"
+		},
+		"outputforinsurance_properties_typeProperties_url": {
+			"value": "https://adfdatalaketraining.dfs.core.windows.net/"
+		},
+		"sqltoadlgen2_properties_typeProperties_url": {
+			"value": "https://adfdatalaketraining.dfs.core.windows.net/"
+		}
+	}
+}
