@@ -1,0 +1,22 @@
+{
+	"name": "sqltoadlgen2",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "sqltoadlgen2",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "dbfolder"
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileSystem": "output"
+			}
+		},
+		"schema": {}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

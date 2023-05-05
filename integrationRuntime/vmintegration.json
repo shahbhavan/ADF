@@ -1,0 +1,6 @@
+{
+	"name": "vmintegration",
+	"properties": {
+		"type": "SelfHosted"
+	}
+}

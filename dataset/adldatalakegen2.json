@@ -1,0 +1,23 @@
+{
+	"name": "adldatalakegen2",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "adl_service_gen2",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "blobtoadl"
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "drug.json",
+				"fileSystem": "output"
+			}
+		},
+		"schema": {}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

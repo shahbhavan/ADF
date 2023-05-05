@@ -1,0 +1,52 @@
+{
+	"name": "dataflowdataset",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "linkedserviceforblob",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "exedataflow"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "drug200.csv",
+				"container": "inputdata"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "Age",
+				"type": "String"
+			},
+			{
+				"name": "Sex",
+				"type": "String"
+			},
+			{
+				"name": "BP",
+				"type": "String"
+			},
+			{
+				"name": "Cholesterol",
+				"type": "String"
+			},
+			{
+				"name": "NAK",
+				"type": "String"
+			},
+			{
+				"name": "Drug",
+				"type": "String"
+			}
+		]
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

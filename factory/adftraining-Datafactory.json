@@ -1,0 +1,9 @@
+{
+	"name": "adftraining-Datafactory",
+	"location": "centralindia",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "17f2ad95-f734-4351-b32b-7511523f2498",
+		"tenantId": "e50ebc84-76f2-4636-b550-c3f7abc924af"
+	}
+}
