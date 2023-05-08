@@ -737,7 +737,7 @@
 					"sinks": [
 						{
 							"dataset": {
-								"referenceName": "adldatalakegen2",
+								"referenceName": "yshoutput",
 								"type": "DatasetReference"
 							},
 							"name": "zomato"
@@ -788,7 +788,7 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/zomato')]",
-				"[concat(variables('factoryId'), '/datasets/adldatalakegen2')]"
+				"[concat(variables('factoryId'), '/datasets/yshoutput')]"
 			]
 		}
 	]
