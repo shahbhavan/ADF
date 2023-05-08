@@ -1,0 +1,26 @@
+{
+	"name": "yshoutput",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "yshoutput",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "yshoutput"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "countryoutput",
+				"fileSystem": "output"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": []
+	}
+}

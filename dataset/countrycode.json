@@ -1,0 +1,35 @@
+{
+	"name": "countrycode",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "yshblob",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "yshfolder"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "CountryCode.csv",
+				"container": "ysh"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "cc",
+				"type": "String"
+			},
+			{
+				"name": "Country",
+				"type": "String"
+			}
+		]
+	}
+}

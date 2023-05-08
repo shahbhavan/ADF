@@ -16,10 +16,6 @@
 				"userProperties": [],
 				"typeProperties": {
 					"notebookPath": "/Users/bhavan.shaha@synechron.com/testing1"
-				},
-				"linkedServiceName": {
-					"referenceName": "azuredatabricksnew",
-					"type": "LinkedServiceReference"
 				}
 			}
 		],
