@@ -1,0 +1,67 @@
+{
+	"name": "yashsource",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "zomato",
+						"type": "DatasetReference"
+					},
+					"name": "data123"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "adldatalakegen2",
+						"type": "DatasetReference"
+					},
+					"name": "zomato"
+				}
+			],
+			"transformations": [
+				{
+					"name": "zomatofilter"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          {Restaurant ID} as string,",
+				"          {Restaurant Name} as string,",
+				"          cc as string,",
+				"          City as string,",
+				"          Address as string,",
+				"          Locality as string,",
+				"          {Locality Verbose} as string,",
+				"          Longitude as string,",
+				"          Latitude as string,",
+				"          Cuisines as string,",
+				"          {Average Cost for two} as string,",
+				"          Currency as string,",
+				"          {Has Table booking} as string,",
+				"          {Has Online delivery} as string,",
+				"          {Is delivering now} as string,",
+				"          {Switch to order menu} as string,",
+				"          {Price range} as string,",
+				"          {Aggregate rating} as string,",
+				"          {Rating color} as string,",
+				"          {Rating text} as string,",
+				"          Votes as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> data123",
+				"data123 filter(City=='Makati City') ~> zomatofilter",
+				"zomatofilter sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> zomato"
+			]
+		}
+	}
+}
