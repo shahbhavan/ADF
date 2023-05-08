@@ -15,7 +15,7 @@
 			"sinks": [
 				{
 					"dataset": {
-						"referenceName": "adldatalakegen2",
+						"referenceName": "yshoutput",
 						"type": "DatasetReference"
 					},
 					"name": "zomato"
