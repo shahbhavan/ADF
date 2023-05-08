@@ -5,13 +5,7 @@
 		"factoryName": {
 			"value": "adftraining-Datafactory"
 		},
-		"DBforjoin_connectionString": {
-			"value": ""
-		},
 		"adl_service_gen2_accountKey": {
-			"value": ""
-		},
-		"cdclinked_connectionString": {
 			"value": ""
 		},
 		"insurancelinked_connectionString": {
@@ -33,6 +27,9 @@
 			"value": ""
 		},
 		"yshoutput_accountKey": {
+			"value": ""
+		},
+		"yshsql_connectionString": {
 			"value": ""
 		},
 		"adl_service_gen2_properties_typeProperties_url": {

@@ -7,17 +7,9 @@
 			"metadata": "Data Factory name",
 			"defaultValue": "adftraining-Datafactory"
 		},
-		"DBforjoin_connectionString": {
-			"type": "secureString",
-			"metadata": "Secure string for 'connectionString' of 'DBforjoin'"
-		},
 		"adl_service_gen2_accountKey": {
 			"type": "secureString",
 			"metadata": "Secure string for 'accountKey' of 'adl_service_gen2'"
-		},
-		"cdclinked_connectionString": {
-			"type": "secureString",
-			"metadata": "Secure string for 'connectionString' of 'cdclinked'"
 		},
 		"insurancelinked_connectionString": {
 			"type": "secureString",
@@ -47,6 +39,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'accountKey' of 'yshoutput'"
 		},
+		"yshsql_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'yshsql'"
+		},
 		"adl_service_gen2_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://adfdatalaketraining.dfs.core.windows.net/"
@@ -69,19 +65,6 @@
 	},
 	"resources": [
 		{
-			"name": "[concat(parameters('factoryName'), '/DBforjoin')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"type": "AzureSqlDatabase",
-				"typeProperties": {
-					"connectionString": "[parameters('DBforjoin_connectionString')]"
-				}
-			},
-			"dependsOn": []
-		},
-		{
 			"name": "[concat(parameters('factoryName'), '/adl_service_gen2')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
 			"apiVersion": "2018-06-01",
@@ -94,19 +77,6 @@
 						"type": "SecureString",
 						"value": "[parameters('adl_service_gen2_accountKey')]"
 					}
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/cdclinked')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"type": "AzureSqlDatabase",
-				"typeProperties": {
-					"connectionString": "[parameters('cdclinked_connectionString')]"
 				}
 			},
 			"dependsOn": []
@@ -215,6 +185,19 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/yshsql')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureSqlDatabase",
+				"typeProperties": {
+					"connectionString": "[parameters('yshsql_connectionString')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/vmintegration')]",
 			"type": "Microsoft.DataFactory/factories/integrationRuntimes",
 			"apiVersion": "2018-06-01",
@@ -305,46 +288,6 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/linkedserviceforblob')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/countrycode')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "yshblob",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "yshfolder"
-				},
-				"annotations": [],
-				"type": "DelimitedText",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobStorageLocation",
-						"fileName": "CountryCode.csv",
-						"container": "ysh"
-					},
-					"columnDelimiter": ",",
-					"escapeChar": "\\",
-					"firstRowAsHeader": true,
-					"quoteChar": "\""
-				},
-				"schema": [
-					{
-						"name": "cc",
-						"type": "String"
-					},
-					{
-						"name": "Country",
-						"type": "String"
-					}
-				]
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/yshblob')]"
 			]
 		},
 		{
@@ -466,6 +409,121 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/zomato')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "yshblob",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "yshinput"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"container": "ysh"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "Restaurant ID",
+						"type": "String"
+					},
+					{
+						"name": "Restaurant Name",
+						"type": "String"
+					},
+					{
+						"name": "cc",
+						"type": "String"
+					},
+					{
+						"name": "City",
+						"type": "String"
+					},
+					{
+						"name": "Address",
+						"type": "String"
+					},
+					{
+						"name": "Locality",
+						"type": "String"
+					},
+					{
+						"name": "Locality Verbose",
+						"type": "String"
+					},
+					{
+						"name": "Longitude",
+						"type": "String"
+					},
+					{
+						"name": "Latitude",
+						"type": "String"
+					},
+					{
+						"name": "Cuisines",
+						"type": "String"
+					},
+					{
+						"name": "Average Cost for two",
+						"type": "String"
+					},
+					{
+						"name": "Currency",
+						"type": "String"
+					},
+					{
+						"name": "Has Table booking",
+						"type": "String"
+					},
+					{
+						"name": "Has Online delivery",
+						"type": "String"
+					},
+					{
+						"name": "Is delivering now",
+						"type": "String"
+					},
+					{
+						"name": "Switch to order menu",
+						"type": "String"
+					},
+					{
+						"name": "Price range",
+						"type": "String"
+					},
+					{
+						"name": "Aggregate rating",
+						"type": "String"
+					},
+					{
+						"name": "Rating color",
+						"type": "String"
+					},
+					{
+						"name": "Rating text",
+						"type": "String"
+					},
+					{
+						"name": "Votes",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/yshblob')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/blobtoadlpipeline')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -533,84 +591,6 @@
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/blobinputfile')]",
 				"[concat(variables('factoryId'), '/datasets/adldatalakegen2')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/yshpipeline')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "yshpipeline",
-						"type": "Copy",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "DelimitedTextSource",
-								"storeSettings": {
-									"type": "AzureBlobStorageReadSettings",
-									"recursive": true,
-									"enablePartitionDiscovery": false
-								},
-								"formatSettings": {
-									"type": "DelimitedTextReadSettings"
-								}
-							},
-							"sink": {
-								"type": "DelimitedTextSink",
-								"storeSettings": {
-									"type": "AzureBlobFSWriteSettings"
-								},
-								"formatSettings": {
-									"type": "DelimitedTextWriteSettings",
-									"quoteAllText": true,
-									"fileExtension": ".txt"
-								}
-							},
-							"enableStaging": false,
-							"translator": {
-								"type": "TabularTranslator",
-								"typeConversion": true,
-								"typeConversionSettings": {
-									"allowDataTruncation": true,
-									"treatBooleanAsNumber": false
-								}
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "countrycode",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "yshoutput",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						]
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/countrycode')]",
-				"[concat(variables('factoryId'), '/datasets/yshoutput')]"
 			]
 		},
 		{
@@ -688,6 +668,127 @@
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/blobinputfile')]",
 				"[concat(variables('factoryId'), '/datasets/outputdataflow')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/yashsource')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "zomato",
+								"type": "DatasetReference"
+							},
+							"name": "data123"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "adldatalakegen2",
+								"type": "DatasetReference"
+							},
+							"name": "zomato"
+						}
+					],
+					"transformations": [
+						{
+							"name": "zomatofilter"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          {Restaurant ID} as string,",
+						"          {Restaurant Name} as string,",
+						"          cc as string,",
+						"          City as string,",
+						"          Address as string,",
+						"          Locality as string,",
+						"          {Locality Verbose} as string,",
+						"          Longitude as string,",
+						"          Latitude as string,",
+						"          Cuisines as string,",
+						"          {Average Cost for two} as string,",
+						"          Currency as string,",
+						"          {Has Table booking} as string,",
+						"          {Has Online delivery} as string,",
+						"          {Is delivering now} as string,",
+						"          {Switch to order menu} as string,",
+						"          {Price range} as string,",
+						"          {Aggregate rating} as string,",
+						"          {Rating color} as string,",
+						"          {Rating text} as string,",
+						"          Votes as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false) ~> data123",
+						"data123 filter(City=='Makati City') ~> zomatofilter",
+						"zomatofilter sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     umask: 0022,",
+						"     preCommands: [],",
+						"     postCommands: [],",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> zomato"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/zomato')]",
+				"[concat(variables('factoryId'), '/datasets/adldatalakegen2')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/dataflow pipeline')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Data flow1",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "pracdataflow",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"source1": {},
+									"sink1": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"annotations": [],
+				"lastPublishTime": "2023-05-03T06:38:34Z"
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/dataflows/pracdataflow')]"
 			]
 		}
 	]
