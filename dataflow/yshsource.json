@@ -1,0 +1,48 @@
+{
+	"name": "yshsource",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "countrycode",
+						"type": "DatasetReference"
+					},
+					"name": "yshsource"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "adldatalakegen2",
+						"type": "DatasetReference"
+					},
+					"name": "yshsink"
+				}
+			],
+			"transformations": [
+				{
+					"name": "aggregate1"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          cc as string,",
+				"          Country as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> yshsource",
+				"yshsource aggregate(groupBy(Country)) ~> aggregate1",
+				"aggregate1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> yshsink"
+			]
+		}
+	}
+}
