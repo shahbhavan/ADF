@@ -11,9 +11,6 @@
 		"adl_service_gen2_accountKey": {
 			"value": ""
 		},
-		"azuredatabricksnew_accessToken": {
-			"value": ""
-		},
 		"cdclinked_connectionString": {
 			"value": ""
 		},
@@ -32,6 +29,12 @@
 		"sqltoadlgen2_accountKey": {
 			"value": ""
 		},
+		"yshblob_connectionString": {
+			"value": ""
+		},
+		"yshoutput_accountKey": {
+			"value": ""
+		},
 		"adl_service_gen2_properties_typeProperties_url": {
 			"value": "https://adfdatalaketraining.dfs.core.windows.net/"
 		},
@@ -39,6 +42,9 @@
 			"value": "https://adfdatalaketraining.dfs.core.windows.net/"
 		},
 		"sqltoadlgen2_properties_typeProperties_url": {
+			"value": "https://adfdatalaketraining.dfs.core.windows.net/"
+		},
+		"yshoutput_properties_typeProperties_url": {
 			"value": "https://adfdatalaketraining.dfs.core.windows.net/"
 		},
 		"containerUri": {

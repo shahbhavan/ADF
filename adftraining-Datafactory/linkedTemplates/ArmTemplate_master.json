@@ -15,10 +15,6 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'accountKey' of 'adl_service_gen2'"
 		},
-		"azuredatabricksnew_accessToken": {
-			"type": "secureString",
-			"metadata": "Secure string for 'accessToken' of 'azuredatabricksnew'"
-		},
 		"cdclinked_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'cdclinked'"
@@ -43,6 +39,14 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'accountKey' of 'sqltoadlgen2'"
 		},
+		"yshblob_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'yshblob'"
+		},
+		"yshoutput_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'yshoutput'"
+		},
 		"adl_service_gen2_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://adfdatalaketraining.dfs.core.windows.net/"
@@ -52,6 +56,10 @@
 			"defaultValue": "https://adfdatalaketraining.dfs.core.windows.net/"
 		},
 		"sqltoadlgen2_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://adfdatalaketraining.dfs.core.windows.net/"
+		},
+		"yshoutput_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://adfdatalaketraining.dfs.core.windows.net/"
 		},
@@ -88,9 +96,6 @@
 					"adl_service_gen2_accountKey": {
 						"value": "[parameters('adl_service_gen2_accountKey')]"
 					},
-					"azuredatabricksnew_accessToken": {
-						"value": "[parameters('azuredatabricksnew_accessToken')]"
-					},
 					"cdclinked_connectionString": {
 						"value": "[parameters('cdclinked_connectionString')]"
 					},
@@ -109,6 +114,12 @@
 					"sqltoadlgen2_accountKey": {
 						"value": "[parameters('sqltoadlgen2_accountKey')]"
 					},
+					"yshblob_connectionString": {
+						"value": "[parameters('yshblob_connectionString')]"
+					},
+					"yshoutput_accountKey": {
+						"value": "[parameters('yshoutput_accountKey')]"
+					},
 					"adl_service_gen2_properties_typeProperties_url": {
 						"value": "[parameters('adl_service_gen2_properties_typeProperties_url')]"
 					},
@@ -117,6 +128,9 @@
 					},
 					"sqltoadlgen2_properties_typeProperties_url": {
 						"value": "[parameters('sqltoadlgen2_properties_typeProperties_url')]"
+					},
+					"yshoutput_properties_typeProperties_url": {
+						"value": "[parameters('yshoutput_properties_typeProperties_url')]"
 					}
 				}
 			},

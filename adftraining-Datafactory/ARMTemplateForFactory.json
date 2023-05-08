@@ -15,10 +15,6 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'accountKey' of 'adl_service_gen2'"
 		},
-		"azuredatabricksnew_accessToken": {
-			"type": "secureString",
-			"metadata": "Secure string for 'accessToken' of 'azuredatabricksnew'"
-		},
 		"cdclinked_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'cdclinked'"
@@ -43,6 +39,14 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'accountKey' of 'sqltoadlgen2'"
 		},
+		"yshblob_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'yshblob'"
+		},
+		"yshoutput_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'yshoutput'"
+		},
 		"adl_service_gen2_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://adfdatalaketraining.dfs.core.windows.net/"
@@ -52,6 +56,10 @@
 			"defaultValue": "https://adfdatalaketraining.dfs.core.windows.net/"
 		},
 		"sqltoadlgen2_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://adfdatalaketraining.dfs.core.windows.net/"
+		},
+		"yshoutput_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://adfdatalaketraining.dfs.core.windows.net/"
 		}
@@ -131,43 +139,6 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/databricks')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Notebook1",
-						"type": "DatabricksNotebook",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"notebookPath": "/Users/bhavan.shaha@synechron.com/testing1"
-						},
-						"linkedServiceName": {
-							"referenceName": "azuredatabricksnew",
-							"type": "LinkedServiceReference"
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/azuredatabricksnew')]"
-			]
-		},
-		{
 			"name": "[concat(parameters('factoryName'), '/dataflow pipeline')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -216,13 +187,13 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/pipeline1')]",
+			"name": "[concat(parameters('factoryName'), '/yshpipeline')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"activities": [
 					{
-						"name": "Copy data1",
+						"name": "yshpipeline",
 						"type": "Copy",
 						"dependsOn": [],
 						"policy": {
@@ -235,31 +206,47 @@
 						"userProperties": [],
 						"typeProperties": {
 							"source": {
-								"type": "AzureSqlSource",
-								"queryTimeout": "02:00:00",
-								"partitionOption": "None"
+								"type": "DelimitedTextSource",
+								"storeSettings": {
+									"type": "AzureBlobStorageReadSettings",
+									"recursive": true,
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "DelimitedTextReadSettings"
+								}
 							},
 							"sink": {
-								"type": "JsonSink",
+								"type": "DelimitedTextSink",
 								"storeSettings": {
 									"type": "AzureBlobFSWriteSettings"
 								},
 								"formatSettings": {
-									"type": "JsonWriteSettings"
+									"type": "DelimitedTextWriteSettings",
+									"quoteAllText": true,
+									"fileExtension": ".txt"
 								}
 							},
-							"enableStaging": false
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
 						},
 						"inputs": [
 							{
-								"referenceName": "sqldataset",
+								"referenceName": "countrycode",
 								"type": "DatasetReference",
 								"parameters": {}
 							}
 						],
 						"outputs": [
 							{
-								"referenceName": "sqltoadlgen2",
+								"referenceName": "yshoutput",
 								"type": "DatasetReference",
 								"parameters": {}
 							}
@@ -270,12 +257,11 @@
 					"elapsedTimeMetric": {},
 					"cancelAfter": {}
 				},
-				"annotations": [],
-				"lastPublishTime": "2023-05-02T09:35:00Z"
+				"annotations": []
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/sqldataset')]",
-				"[concat(variables('factoryId'), '/datasets/sqltoadlgen2')]"
+				"[concat(variables('factoryId'), '/datasets/countrycode')]",
+				"[concat(variables('factoryId'), '/datasets/yshoutput')]"
 			]
 		},
 		{
@@ -359,6 +345,46 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/linkedserviceforblob')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/countrycode')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "yshblob",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "yshfolder"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "CountryCode.csv",
+						"container": "ysh"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "cc",
+						"type": "String"
+					},
+					{
+						"name": "Country",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/yshblob')]"
 			]
 		},
 		{
@@ -449,81 +475,34 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/sqldataset')]",
+			"name": "[concat(parameters('factoryName'), '/yshoutput')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"linkedServiceName": {
-					"referenceName": "sqllinkedservices",
+					"referenceName": "yshoutput",
 					"type": "LinkedServiceReference"
 				},
 				"folder": {
-					"name": "dbfolder"
+					"name": "yshoutput"
 				},
 				"annotations": [],
-				"type": "AzureSqlTable",
-				"schema": [
-					{
-						"name": "id",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "name",
-						"type": "varchar"
-					},
-					{
-						"name": "location",
-						"type": "varchar"
-					},
-					{
-						"name": "pincode",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "cc",
-						"type": "varchar"
-					},
-					{
-						"name": "salary",
-						"type": "int",
-						"precision": 10
-					}
-				],
-				"typeProperties": {
-					"schema": "dbo",
-					"table": "bankdata"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/sqllinkedservices')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/sqltoadlgen2')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "sqltoadlgen2",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "dbfolder"
-				},
-				"annotations": [],
-				"type": "Json",
+				"type": "DelimitedText",
 				"typeProperties": {
 					"location": {
 						"type": "AzureBlobFSLocation",
+						"fileName": "countryoutput",
 						"fileSystem": "output"
-					}
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
 				},
-				"schema": {}
+				"schema": []
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/sqltoadlgen2')]"
+				"[concat(variables('factoryId'), '/linkedServices/yshoutput')]"
 			]
 		},
 		{
@@ -552,31 +531,6 @@
 						"type": "SecureString",
 						"value": "[parameters('adl_service_gen2_accountKey')]"
 					}
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/azuredatabricksnew')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"type": "AzureDatabricks",
-				"typeProperties": {
-					"domain": "https://adb-281204478657166.6.azuredatabricks.net",
-					"accessToken": {
-						"type": "SecureString",
-						"value": "[parameters('azuredatabricksnew_accessToken')]"
-					},
-					"newClusterNodeType": "Standard_DS3_v2",
-					"newClusterNumOfWorker": "1",
-					"newClusterSparkEnvVars": {
-						"PYSPARK_PYTHON": "/databricks/python3/bin/python3"
-					},
-					"newClusterVersion": "10.4.x-scala2.12",
-					"newClusterInitScripts": [],
-					"clusterOption": "Fixed"
 				}
 			},
 			"dependsOn": []
@@ -662,6 +616,36 @@
 					"accountKey": {
 						"type": "SecureString",
 						"value": "[parameters('sqltoadlgen2_accountKey')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/yshblob')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobStorage",
+				"typeProperties": {
+					"connectionString": "[parameters('yshblob_connectionString')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/yshoutput')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobFS",
+				"typeProperties": {
+					"url": "[parameters('yshoutput_properties_typeProperties_url')]",
+					"accountKey": {
+						"type": "SecureString",
+						"value": "[parameters('yshoutput_accountKey')]"
 					}
 				}
 			},
